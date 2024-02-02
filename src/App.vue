@@ -16,6 +16,11 @@ const readTag = async () => {
           console.log("=== data ===\n" + decoder.decode(record.data));
         }
       };
+
+      // Check if permission is granted
+      if (ndef.permissionState === "denied") {
+        console.error("Permission to access NFC devices is denied.");
+      }
     } catch (error) {
       console.log(error);
     }
