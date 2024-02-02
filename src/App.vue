@@ -3,28 +3,42 @@ import { RouterLink, RouterView } from "vue-router";
 import HelloWorld from "./components/HelloWorld.vue";
 import { onMounted } from "vue";
 
+const requestNFCPermission = async () => {
+  try {
+    const nfc = new NDEFReader();
+    await nfc.scan();
+    return true; // Permission granted
+  } catch (error) {
+    console.error("Error while requesting NFC permission:", error);
+    return false; // Permission denied
+  }
+};
+
 const readTag = async () => {
-  if ("NDEFReader" in window) {
-    const ndef = new NDEFReader();
-    // Check if permission is granted
-    if (ndef.permissionState === "denied") {
-      console.error("Permission to access NFC devices is denied.");
-    }
-    try {
-      await ndef.scan();
-      ndef.onreading = (event) => {
-        const decoder = new TextDecoder();
-        for (const record of event.message.records) {
-          console.log("Record type:  " + record.recordType);
-          console.log("MIME type:    " + record.mediaType);
-          console.log("=== data ===\n" + decoder.decode(record.data));
-        }
-      };
-    } catch (error) {
-      console.log(error);
-    }
+  const permissionGranted = await requestNFCPermission();
+
+  if (permissionGranted) {
+    console.log("NFC permission granted. Scanning tags...");
+    const nfc = new NDEFReader();
+
+    nfc.onreading = (event) => {
+      const decoder = new TextDecoder();
+      for (const record of event.message.records) {
+        console.log("Record type: " + record.recordType);
+        console.log("MIME type: " + record.mediaType);
+        console.log("=== data ===\n" + decoder.decode(record.data));
+      }
+    };
+
+    nfc.onerror = (error) => {
+      console.error("Error while scanning NFC tag:", error);
+    };
+
+    nfc.start();
   } else {
-    console.log("Web NFC is not supported.");
+    console.log(
+      "NFC permission denied. Please grant permission to access NFC devices."
+    );
   }
 };
 
