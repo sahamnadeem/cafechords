@@ -1,11 +1,43 @@
 <script setup>
-import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
+import { RouterLink, RouterView } from "vue-router";
+import HelloWorld from "./components/HelloWorld.vue";
+import { onMounted } from "vue";
+
+const readTag = async () => {
+  if ("NDEFReader" in window) {
+    const ndef = new NDEFReader();
+    try {
+      await ndef.scan();
+      ndef.onreading = (event) => {
+        const decoder = new TextDecoder();
+        for (const record of event.message.records) {
+          console.log("Record type:  " + record.recordType);
+          console.log("MIME type:    " + record.mediaType);
+          console.log("=== data ===\n" + decoder.decode(record.data));
+        }
+      };
+    } catch (error) {
+      console.log(error);
+    }
+  } else {
+    console.log("Web NFC is not supported.");
+  }
+};
+
+onMounted(() => {
+  readTag();
+});
 </script>
 
 <template>
   <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
+    <img
+      alt="Vue logo"
+      class="logo"
+      src="@/assets/logo.svg"
+      width="125"
+      height="125"
+    />
 
     <div class="wrapper">
       <HelloWorld msg="You did it!" />
