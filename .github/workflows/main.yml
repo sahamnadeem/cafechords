@@ -21,8 +21,14 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Debug - List files before build
+        run: ls -l
+
       - name: Build Vue.js project
         run: npm run build
+
+      - name: Debug - List files after build
+        run: ls -l
 
       - name: Verify dist directory
         run: |
