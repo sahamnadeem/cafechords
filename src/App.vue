@@ -6,6 +6,10 @@ import { onMounted } from "vue";
 const readTag = async () => {
   if ("NDEFReader" in window) {
     const ndef = new NDEFReader();
+    // Check if permission is granted
+    if (ndef.permissionState === "denied") {
+      console.error("Permission to access NFC devices is denied.");
+    }
     try {
       await ndef.scan();
       ndef.onreading = (event) => {
@@ -16,11 +20,6 @@ const readTag = async () => {
           console.log("=== data ===\n" + decoder.decode(record.data));
         }
       };
-
-      // Check if permission is granted
-      if (ndef.permissionState === "denied") {
-        console.error("Permission to access NFC devices is denied.");
-      }
     } catch (error) {
       console.log(error);
     }
