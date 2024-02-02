@@ -41,10 +41,6 @@ const readTag = async () => {
     );
   }
 };
-
-onMounted(() => {
-  readTag();
-});
 </script>
 
 <template>
@@ -64,6 +60,8 @@ onMounted(() => {
         <RouterLink to="/">Home</RouterLink>
         <RouterLink to="/about">About</RouterLink>
       </nav>
+
+      <button @click="readTag">scan now</button>
     </div>
   </header>
 
