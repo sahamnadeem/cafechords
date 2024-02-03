@@ -15,6 +15,7 @@ const requestNFCPermission = async () => {
 };
 
 const readTag = async () => {
+  console.log("here");
   const permissionGranted = await requestNFCPermission();
 
   if (permissionGranted) {
