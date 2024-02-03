@@ -34,8 +34,6 @@ const readTag = async () => {
     nfc.onerror = (error) => {
       console.error("Error while scanning NFC tag:", error);
     };
-
-    nfc.start();
   } else {
     console.log(
       "NFC permission denied. Please grant permission to access NFC devices."
