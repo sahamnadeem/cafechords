@@ -59,7 +59,9 @@ const onError = (err) => {
 const onDetect = async (detectedCodes) => {
   result.value = JSON.stringify(detectedCodes.map((code) => code.rawValue));
   await store.storeQr(detectedCodes.map((code) => code.rawValue));
-  router.go(-1);
+  setTimeout(() => {
+    router.go(-1);
+  }, 1000);
 };
 </script>
 
