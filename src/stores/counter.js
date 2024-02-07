@@ -1,12 +1,19 @@
-import { ref, computed } from 'vue'
-import { defineStore } from 'pinia'
+import { ref, computed } from "vue";
+import { defineStore } from "pinia";
 
-export const useCounterStore = defineStore('counter', () => {
-  const count = ref(0)
-  const doubleCount = computed(() => count.value * 2)
-  function increment() {
-    count.value++
+export const useCounterStore = defineStore("counter", () => {
+  const qr = ref("");
+  const err = ref("");
+  function storeQr(payload) {
+    qr.value = payload;
   }
 
-  return { count, doubleCount, increment }
-})
+  function storeErr(payload) {
+    err.value = payload;
+  }
+
+  const getErr = computed(() => err.value);
+  const getQr = computed(() => qr.value);
+
+  return { qr, storeQr, getQr, storeErr, getErr };
+});
